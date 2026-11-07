@@ -446,15 +446,9 @@ fn buildProcess(b: *std.Build, obj: *std.Build.Step.Compile) void {
 }
 
 fn buildSystem(b: *std.Build, obj: *std.Build.Step.Compile) void {
-    const systemPath = (b.lazyDependency("system", .{}) orelse return).path("src");
-
-    obj.root_module.addCSourceFiles(.{
-        .root = systemPath,
-        .files = &.{
-            "error_code.cpp",
-        },
-        .flags = cxxFlags,
-    });
+    _ = b;
+    _ = obj;
+    // Boost.System is header-only in Boost 1.92+
 }
 
 fn buildAtomic(b: *std.Build, obj: *std.Build.Step.Compile) void {
