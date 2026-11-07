@@ -8,6 +8,8 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
         .cobalt = true,
+        .stacktrace = true,
+        .serialization = true,
     });
 
     inline for (&.{
@@ -62,7 +64,7 @@ fn buildTests(b: *std.Build, options: struct {
     }
     if (exe.rootModuleTarget().abi != .msvc) {
         exe.root_module.link_libcpp = true;
-        exe.root_module.addCMacro("_GNU_SOURCE", "");
+        exe.root_module.addCMacro("_GNU_SOURCE", "1");
     } else {
         exe.root_module.link_libc = true;
         // Disable auto-linking.
