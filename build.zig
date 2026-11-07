@@ -801,13 +801,27 @@ fn buildStacktrace(b: *std.Build, obj: *std.Build.Step.Compile) void {
     obj.root_module.addCSourceFiles(.{
         .root = stackPath,
         .files = &.{
-            "addr2line.cpp",
             "basic.cpp",
-            "from_exception.cpp",
             "noop.cpp",
         },
         .flags = cxxFlags,
     });
+    if (obj.rootModuleTarget().os.tag != .linux) {
+        obj.root_module.addCSourceFiles(.{
+            .root = stackPath,
+            .files = &.{
+                "from_exception.cpp",
+            },
+            .flags = cxxFlags,
+        });
+    }
+    if (obj.rootModuleTarget().os.tag != .windows) {
+        obj.root_module.addCSourceFiles(.{
+            .root = stackPath,
+            .files = &.{"addr2line.cpp"},
+            .flags = cxxFlags,
+        });
+    }
     // TODO: fix https://github.com/ziglang/zig/issues/21308
     if (checkSystemLibrary(obj, "backtrace")) {
         obj.root_module.addCSourceFiles(.{
